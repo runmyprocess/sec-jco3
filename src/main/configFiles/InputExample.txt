@@ -4,7 +4,7 @@
 "SAPUser":"username",
 "SAPPassword":"mypass123",
 "serviceName":"ABAP_AS_WITH_POOL",
-"Function":"BAPI_USER_GET_DETAIL",
+"function":"BAPI_USER_GET_DETAIL",
 "inputParameters":{
                                 "USERAME":"UserName"
                             }
