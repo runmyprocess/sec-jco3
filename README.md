@@ -60,7 +60,6 @@ You can now run the Adapter by executing the rmp-sec-JCO3Conector.jar in the ins
 If everything is configured correctly you can now place a request from RMP to retrieve information from SAP.
 The POST body should look something like this :
     
-	:::JSONRMP
 	{
 	"protocol":"JCO3",
 	"data":{
@@ -76,7 +75,6 @@ The POST body should look something like this :
 
 The expected return is a JSON object that should look like this :
 
-	:::JSONRMP
 	{
 	"SECStatus":200,
 	"Response":SAPResponse
