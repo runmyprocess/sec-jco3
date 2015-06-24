@@ -155,7 +155,7 @@ public class JCO3 implements ProtocolInterface {
     @Override
     public void accept(JSONObject jsonObject,String configPath) {
         try{
-            LOG.log("Starting JCO request", Level.INFO);
+            //LOG.log("Starting JCO request", Level.INFO);
 
             if (jsonObject.getString("TEST") != null){
                 JSONObject reply = new JSONObject();
