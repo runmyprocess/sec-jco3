@@ -6,7 +6,7 @@
 
     <groupId>JCO3Adapter</groupId>
     <artifactId>JCO3Adapter</artifactId>
-    <version>1.0</version>
+    <version>pulque</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -31,12 +31,6 @@
             <artifactId>jco</artifactId>
             <version>3.01</version>
          </dependency>
-        <dependency>
-            <groupId>com.runmyprocess.sec</groupId>
-            <artifactId>rmp-sec-sdk</artifactId>
-            <version>develop</version>
-        </dependency>
-
     </dependencies>
 
     <build>
