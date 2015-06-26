@@ -6,42 +6,28 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoContext;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
-import com.sap.conn.jco.JCoField;
+import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
-import com.sap.conn.jco.JCoMetaData;
-import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoRepository;
-import com.sap.conn.jco.JCoStructure;
-import com.sap.conn.jco.JCoTable;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 
-
-
-
-
-//import org.json.XML;
-import org.runmyprocess.json.JSON;
-import org.runmyprocess.json.JSONArray;
+import org.runmyprocess.json.JSONException;
 import org.runmyprocess.json.JSONObject;
 //import org.runmyprocess.sec.SECLogManager;
 import org.runmyprocess.sec.Config;
 import org.runmyprocess.sec.ProtocolInterface;
 import org.runmyprocess.sec.Response;
 
-
 /**
  *
  * @author Malcolm Haslam <mhaslam@runmyprocess.com> 
- * 
+ * @author Sanket Joshi <sanket.joshi@flowian.com>
  *
  * Copyright (C) 2013 Fujitsu RunMyProcess
  *
@@ -151,160 +137,80 @@ public class JCO3 implements ProtocolInterface {
 		}
 		//LOG.log("Getting destination...", Level.INFO);
 		JCoDestination destination = JCoDestinationManager.getDestination(jsonObject.getString("serviceName"));
-
 		//LOG.log("Getting repository...", Level.INFO);
 		JCoRepository repository=destination.getRepository();
-
 		//LOG.log("Starting State-full session...", Level.INFO);
 		JCoContext.begin(destination);
 		JCO3DataHandler datahandler=new JCO3DataHandler();
-		String output="";
+		JSONObject response=new JSONObject();
 
-
-		if(jsonObject.containsKey("functionName"))
+		if(jsonObject.containsKey("functionName") && !jsonObject.containsKey("getMetaData"))
 		{
-			JCoFunction function=repository.getFunction(jsonObject.getString("functionName"));
-			//System.out.println("Retrieving function");
 			//LOG.log("Retrieving function", Level.INFO);
+			JCoFunction function=repository.getFunction(jsonObject.getString("functionName"));
 			if(function == null)
-				throw new RuntimeException("function not found in SAP.");
+				throw new RuntimeException(jsonObject.getString("functionName")+" function not found in SAP.");
 			if(function != null)
 			{
-				/**
-				 * setting import parameters (including field, table, structure)
-				 */
-				//LOG.log("Setting import parameters", Level.INFO);
-				JSONObject inputParameters = jsonObject.getJSONObject("inputParameters"); 
-				if(inputParameters != null)
-				{
-					try
-					{
-						JCoParameterList parameterlist=function.getImportParameterList();
-						datahandler.setParameters(inputParameters, parameterlist);
-					}
-					catch (Exception e)
-					{
-						return JCO3Error(e);
-					}
+				try{
+					if(jsonObject.containsKey("importParameters") || jsonObject.containsKey("exportParameters") || jsonObject.containsKey("tableParameters") || jsonObject.containsKey("changingParameters"))
+						datahandler.setParamerts(jsonObject,function); 
 
+					function.execute(destination);  // call to SAP server
+
+					if(jsonObject.containsKey("responseType") && jsonObject.getString("responseType").equalsIgnoreCase("xml"))
+						response.put(function.getName(),function.toXML());	
+					else
+						response.put(function.getName(),datahandler.getParamerts(function));
 				}
-				/**
-				 * setting export parameters
-				 */
-				//LOG.log("Deactivating unwanted export parameters"", Level.INFO);
-				JSONObject exportParameters = jsonObject.getJSONObject("exportParameters"); 
-				if(exportParameters != null)
-				{
-					Set<?> keys = exportParameters.keySet();            
-					JCoParameterList parameterlist=function.getExportParameterList();
-					try
-					{         	
-						Iterator<JCoField> fieldIterator = parameterlist.iterator();
-						while (fieldIterator.hasNext()){
-							String fieldName=fieldIterator.next().getName();
-							if(keys.contains(fieldName))
-								parameterlist.setActive(fieldName, true);
-							else
-								parameterlist.setActive(fieldName, false);
-						}
-					}
-					catch (Exception e)
-					{
-						return JCO3Error(e);
-					}
-
+				catch (JSONException e){
+					e.printStackTrace();return JCO3Error(e);
 				}
-				/**
-				 * setting table parameters (including field, table, structure)
-				 */
-				//LOG.log("Setting table parameters", Level.INFO);
-				JSONObject tableParameters = jsonObject.getJSONObject("tableParameters");		
-				if(tableParameters != null)
-				{
-					try
-					{
-						JCoParameterList parameterlist=function.getTableParameterList();
-						datahandler.setParameters(tableParameters, parameterlist);
-					}
-					catch (Exception e)
-					{
-						return JCO3Error(e);
-					}
-				}        
-
-				/**
-				 * setting changing parameters
-				 */
-				//LOG.log("Setting changing parameters", Level.INFO);
-				JSONObject changingParameter = jsonObject.getJSONObject("changingParameter"); 
-				if(changingParameter != null)
-				{
-					try
-					{
-						JCoParameterList parameterlist=function.getChangingParameterList();
-						datahandler.setParameters(changingParameter, parameterlist);
-					}
-					catch (Exception e)
-					{
-						return JCO3Error(e);
-					}
+				catch (AbapException e){
+					e.printStackTrace();return JCO3Error(e);
 				}
-
-				/**
-				 * execute destination
-				 */
-				//System.out.println("Execuing destination");
-				//LOG.log("Execuing destination", Level.INFO);
-				try
-				{
-					function.execute(destination);
+				catch (JCoException e) {
+					e.printStackTrace();return JCO3Error(e);
 				}
-				catch (AbapException e)
-				{
-					return JCO3Error(e);
+				catch (Exception e) {
+					e.printStackTrace();return JCO3Error(e);
 				}
-
-				output=output+function.toXML().toString();
-
+				finally{
+					JCoContext.end(destination);
+				}
 			}
 		}
 		else
-			if(jsonObject.containsKey("functionName") && (jsonObject.containsKey("getMetaData")  && jsonObject.getString("getMetaData")=="true"))
+			if(jsonObject.containsKey("functionName") && 
+					jsonObject.containsKey("getMetaData")  && 
+					jsonObject.getString("getMetaData").equalsIgnoreCase("true") && 
+					!jsonObject.containsKey("importParameters") &&
+					!jsonObject.containsKey("exportParameters") &&
+					!jsonObject.containsKey("tableParameters") &&
+					!jsonObject.containsKey("changingParameters"))
 			{
-				//send meta Data 
+				JCoFunction function=repository.getFunction(jsonObject.getString("functionName"));
+				if(function == null)
+					throw new RuntimeException(jsonObject.getString("functionName")+" function not found in SAP.");
+				if(function != null)
+				{
+					try	{	
+						response.put(function.getName(),datahandler.getParamertsMetadata(function));
+					}catch (Exception e){
+						return JCO3Error(e);
+					}finally{
+						JCoContext.end(destination);
+					}
+				}
 			}
 			else
-				if(!jsonObject.containsKey("functionName") && (jsonObject.containsKey("getBAPIList")  && jsonObject.getString("getBAPIList")=="true"))
-				{
-					//list down the existing BAPI in JCO repository.
-					String[] BapiList = repository.getCachedFunctionTemplateNames();
-					JSONObject existingBapiList=new JSONObject();
-					for (int i = 0; i <BapiList.length; i++) {
-						existingBapiList.put(Integer.toString(i+1), BapiList[i]);
-					}
-					output=existingBapiList.toString();
-				}
-				else
-				{
-					return JCO3Error(new Exception("Bad Request"));
-				}
+			{
+				System.out.println("Bad Request");
+				return JCO3Error(new Exception("Bad Request"));
+			}
 
-		/**
-		 * returning XML response 
-		 */
-		JSONObject SAPResponse = new JSONObject();
-		SAPResponse.put("Response", output);
-		/**
-		 * need conversion (XML to JSON)
-		 */
-		JCoContext.end(destination);
-		return SAPResponse;
+		return response;
 	}
-
-
-
-
-
 
 	/**
 	 * Receives the information, reads the configuration information and calls the appropriate functions to set the
@@ -319,11 +225,13 @@ public class JCO3 implements ProtocolInterface {
 			if (jsonObject.getString("TEST") != null){
 				JSONObject reply = new JSONObject();
 				reply.put("Response","Automatic TEST response from SAP Adapter");
-				response.setStatus(200);//sets sec status to 200
+				response.setStatus(200);//sets SEC status to 200
 				response.setData(reply);
 			}else{
 				setConnection(jsonObject);
-				response.setData(executeSAPBapi(jsonObject));
+				JSONObject reply = new JSONObject();
+				reply.put("Response",executeSAPBapi(jsonObject));
+				response.setData(reply);
 			}
 
 		} catch (Exception e) {
