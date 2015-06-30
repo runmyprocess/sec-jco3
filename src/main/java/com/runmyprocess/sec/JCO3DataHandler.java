@@ -5,10 +5,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.runmyprocess.json.JSON;
 import org.runmyprocess.json.JSONArray;
 import org.runmyprocess.json.JSONObject;
+import org.runmyprocess.sec.SECLogManager;
 
 import com.sap.conn.jco.JCoField;
 import com.sap.conn.jco.JCoFieldIterator;
@@ -26,8 +28,7 @@ import com.sap.conn.jco.JCoTable;
 
 public class JCO3DataHandler {
 
-
-	/****************************************************************************get meta data*******************************************************************/
+	private static final SECLogManager LOG = new SECLogManager(JCO3DataHandler.class.getName());
 	/**
 	 * 
 	 * @param function
@@ -129,10 +130,6 @@ public class JCO3DataHandler {
 		return m;
 	}
 
-	/*******************************************************************Getters***************************************************************************/
-
-
-
 	/**
 	 * 
 	 * @param function
@@ -142,22 +139,26 @@ public class JCO3DataHandler {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public LinkedHashMap getParamerts(JCoFunction function) throws Exception
 	{
+		LOG.log("Getting import parameters...", Level.INFO);
 		LinkedHashMap paramertsList=new LinkedHashMap();
 		if(function.getImportParameterList() != null){
 			JCoFieldIterator importIterator=function.getImportParameterList().getFieldIterator();
 			LinkedHashMap importParameters=new LinkedHashMap();
 			paramertsList.put("importParameters",getField(importIterator,importParameters));
 		}
+		LOG.log("Getting export parameters...", Level.INFO);
 		if(function.getExportParameterList() != null){
 			JCoFieldIterator exportIterator=function.getExportParameterList().getFieldIterator();
 			LinkedHashMap exportParameters=new LinkedHashMap();
 			paramertsList.put("exportParameters",getField(exportIterator,exportParameters));
 		}
+		LOG.log("Getting table parameters...", Level.INFO);
 		if(function.getTableParameterList() != null){
 			JCoFieldIterator tableIterator=function.getTableParameterList().getFieldIterator();
 			LinkedHashMap tableParameters=new LinkedHashMap();	
 			paramertsList.put("tableParameters",getField(tableIterator,tableParameters));
 		}
+		LOG.log("Getting changing parameters...", Level.INFO);
 		if(function.getChangingParameterList() != null){
 			JCoFieldIterator changingIterator=function.getChangingParameterList().getFieldIterator();
 			LinkedHashMap changingParameters=new LinkedHashMap();	
@@ -244,7 +245,6 @@ public class JCO3DataHandler {
 		return m;
 	}
 
-	/*****************************************************************************************************************************/
 
 	private String getABAPFliedValueAsString(JCoField field,String abap_jco_type) throws Exception
 	{
@@ -262,42 +262,42 @@ public class JCO3DataHandler {
 		case "NUM":value=field.getString();break;//String
 
 		case "BYTE":value=field.getByteArray().toString();
-				;break;//byte()
+		;break;//byte()
 
 		case "BCD":value=field.getBigDecimal().toString();
-				;break;//BigDecimal
+		;break;//BigDecimal
 
 		case "INT":value=String.valueOf(field.getInt());
-				;break;//int
+		;break;//int
 
 		case "INT1":value=String.valueOf(field.getInt());
-				;break;//int
+		;break;//int
 
 		case "INT2":value=String.valueOf(field.getInt()) ;
-				;break;//int
+		;break;//int
 
 		case "FLOAT":value=String.valueOf(field.getFloat());
-				;break;//double
+		;break;//double
 
 		case "DATE":value=field.getString();
-				;break;//Date("YYYYMMDD")
+		;break;//Date("YYYYMMDD")
 
 		case "TIME":value=field.getString();
-				;break;//Date("HHMMSS")
+		;break;//Date("HHMMSS")
 
 		case "DECF16":value=field.getBigDecimal().toString();
 		;break;//BigDecimal
 
 		case "DECF34":value=field.getBigDecimal().toString();
-				;break;//BigDecimal
+		;break;//BigDecimal
 
 		case "STRING":value=field.getString();
-				;break;//string
+		;break;//string
 
 		case "XSTRING":value=field.getByteArray().toString() ;
-				;break;//byte()
+		;break;//byte()
 
-		default: System.out.println("Error while setting value for Unknown ABAP type "+abap_jco_type);break;		
+		default: LOG.log("Error while getting value for Unknown ABAP type "+abap_jco_type, Level.WARNING);break;				
 		}
 		return value;
 	}
@@ -315,48 +315,48 @@ public class JCO3DataHandler {
 		switch(abap_jco_type)
 		{
 		case "CHAR":value=table.getString(field.getName()); 
-				;break;//String
+		;break;//String
 
 		case "NUM":value=table.getString(field.getName());
-				;break;//String
+		;break;//String
 
 		case "BYTE":value=table.getByteArray(field.getName()).toString();
-				;break;//byte()
+		;break;//byte()
 
 		case "BCD":value=table.getBigDecimal(field.getName()).toString() ;
-				;break;//BigDecimal
+		;break;//BigDecimal
 
 		case "INT":value=String.valueOf(table.getInt(field.getName())) ;
-				;break;//int
+		;break;//int
 
 		case "INT1":value=String.valueOf(table.getInt(field.getName())) ;
-				;break;//int
+		;break;//int
 
 		case "INT2":value=String.valueOf(table.getInt(field.getName()));
-				;break;//int
+		;break;//int
 
 		case "FLOAT":value=String.valueOf(table.getFloat(field.getName())) ;
-			;break;//double
+		;break;//double
 
 		case "DATE":value=table.getString(field.getName());
-				;break;//Date("YYYYMMDD")
+		;break;//Date("YYYYMMDD")
 
 		case "TIME":value=table.getString(field.getName());
-				;break;//Date("HHMMSS")
+		;break;//Date("HHMMSS")
 
 		case "DECF16":value=table.getBigDecimal(field.getName()).toString() ;
-				;break;//BigDecimal
+		;break;//BigDecimal
 
 		case "DECF34":value=table.getBigDecimal(field.getName()).toString() ;
-				;break;//BigDecimal
+		;break;//BigDecimal
 
 		case "STRING":value=table.getString(field.getName());
-				;break;//string
+		;break;//string
 
 		case "XSTRING":value=table.getByteArray(field.getName()).toString();
-				;break;//byte()
+		;break;//byte()
 
-		default: System.out.println("Error while setting value for Unknown ABAP type "+abap_jco_type);break;		
+		default: LOG.log("Error while getting value for Unknown ABAP type "+abap_jco_type, Level.WARNING);break;				
 		}
 		return value;
 	}
@@ -386,38 +386,34 @@ public class JCO3DataHandler {
 		case "INT1":value=String.valueOf(structure.getInt(field.getName()));break;//int
 
 		case "INT2":value=String.valueOf(structure.getInt(field.getName()));
-				;break;//int
+		;break;//int
 
 		case "FLOAT":value=String.valueOf(structure.getFloat(field.getName())) ;
-				;break;//double
+		;break;//double
 
 		case "DATE":value=structure.getString(field.getName()) ;
-				;break;//Date("YYYYMMDD")
+		;break;//Date("YYYYMMDD")
 
 		case "TIME":value=structure.getString(field.getName()) ;
-				;break;//Date("HHMMSS")
+		;break;//Date("HHMMSS")
 
 		case "DECF16":value=structure.getBigDecimal(field.getName()).toString() ;
-				;break;//BigDecimal
+		;break;//BigDecimal
 
 		case "DECF34":value=structure.getBigDecimal(field.getName()).toString();
-				;break;//BigDecimal
+		;break;//BigDecimal
 
 		case "STRING":value=structure.getString(field.getName());
-				;break;//string
+		;break;//string
 
 		case "XSTRING":value=structure.getByteArray(field.getName()).toString(); 
-				;break;//byte()
+		;break;//byte()
 
-		default: System.out.println("Error while setting value for Unknown ABAP type "+abap_jco_type);break;		
+		default: LOG.log("Error while getting value for Unknown ABAP type "+abap_jco_type, Level.WARNING);break;		
 		}
 		return value;
 	}
 
-
-
-	
-	/************************************************************************Setters***********************************************************************/
 	/**
 	 * 
 	 * @param jsonObject
@@ -427,16 +423,20 @@ public class JCO3DataHandler {
 	public void setParamerts(JSONObject jsonObject,JCoFunction function) throws Exception 
 	{
 
-		//LOG.log("Setting import parameters", Level.INFO);
+		LOG.log("Setting import parameters...", Level.INFO);
 		JSONObject inputParameters = jsonObject.getJSONObject("inputParameters"); 
 		if(inputParameters != null)
 		{
+			if(inputParameters.keySet() == null)
+				return;
 			setParametersList(inputParameters, function.getImportParameterList());
 		}
-		//LOG.log("Deactivating unwanted export parameters"", Level.INFO);
+		LOG.log("Setting and deactivating unwanted export parameters...", Level.INFO);
 		JSONObject exportParameters = jsonObject.getJSONObject("exportParameters"); 
 		if(exportParameters != null)
 		{
+			if(exportParameters.keySet() == null)
+				return;
 			setParametersList(exportParameters, function.getExportParameterList());
 			Set<?> keys = exportParameters.keySet();            
 			JCoParameterList parameterlist=function.getExportParameterList();
@@ -449,13 +449,13 @@ public class JCO3DataHandler {
 					parameterlist.setActive(fieldName, false);
 			}
 		}
-		//LOG.log("Setting table parameters", Level.INFO);
+		LOG.log("Setting table parameters...", Level.INFO);
 		JSONObject tableParameters = jsonObject.getJSONObject("tableParameters");		
 		if(tableParameters != null)
 		{
 			setParametersList(tableParameters, function.getTableParameterList());
 		}        
-		//LOG.log("Setting changing parameters", Level.INFO);
+		LOG.log("Setting changing parameters...", Level.INFO);
 		JSONObject changingParameter = jsonObject.getJSONObject("changingParameter"); 
 		if(changingParameter != null)
 		{
@@ -487,9 +487,8 @@ public class JCO3DataHandler {
 				parameterlist.setValue(key.toString(), table);
 				}
 				if(metaData.getTypeAsString(key.toString())=="STRUCTURE")
-				{//LOG.log("Bad input pattern.\nYou'r trying to create a table which is structure type in ABAP.", Level.INFO);
-					return;
-				}
+				{LOG.log("Bad input pattern.\nYou'r trying to create a table which is structure type in ABAP.", Level.INFO);
+				throw new Exception("Bad input pattern.");}
 				}
 			}
 			else
@@ -502,8 +501,8 @@ public class JCO3DataHandler {
 				parameterlist.setValue(key.toString(), structure);
 				}
 				if(metaData.getTypeAsString(key.toString())=="TABLE")
-				{//LOG.log("Bad input pattern.\nYou'r trying to create a structure which is table type in ABAP.", Level.INFO);
-					return;}
+				{LOG.log("Bad input pattern.\nYou'r trying to create a structure which is table type in ABAP.", Level.INFO);
+				throw new Exception("Bad input pattern.");}
 				}
 				}else
 				{
@@ -526,12 +525,7 @@ public class JCO3DataHandler {
 			Set<?> keys = child.getJSONObject(i).keySet();
 			for (Object key : keys) 
 			{          	    
-				try{
-					setABAPTableValue(table,key.toString(), child.getJSONObject(i).getString(key.toString()), table.getMetaData().getTypeAsString(key.toString()));
-				}
-				catch(Exception ez){
-					ez.printStackTrace();
-				}
+				setABAPTableValue(table,key.toString(), child.getJSONObject(i).getString(key.toString()), table.getMetaData().getTypeAsString(key.toString()));
 			}
 		}
 		return table;  
@@ -701,12 +695,12 @@ public class JCO3DataHandler {
 			}
 			break;		
 
-		default: System.out.println("Error while setting value for Unknown ABAP type "+abap_jco_type);
+		default:LOG.log("Error while setting value for Unknown ABAP type "+abap_jco_type, Level.WARNING);
 		break;		
 		}
 	}
 
-
+	
 
 
 	/**
@@ -853,7 +847,7 @@ public class JCO3DataHandler {
 			}
 			break;		
 
-		default: System.out.println("Error while setting value for Unknown ABAP type "+abap_jco_type);
+		default: LOG.log("Error while setting value for Unknown ABAP type "+abap_jco_type, Level.WARNING);
 		break;		
 		}
 	}
@@ -1001,7 +995,7 @@ public class JCO3DataHandler {
 			}
 			break;		
 
-		default: System.out.println("Error while setting value for Unknown ABAP type "+abap_jco_type);
+		default: LOG.log("Error while setting value for Unknown ABAP type "+abap_jco_type, Level.WARNING);
 		break;		
 		}
 	}
