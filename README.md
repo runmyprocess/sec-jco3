@@ -47,7 +47,7 @@ The **JCO3.config** file should look like this :
 	JCO_SYSNR = DPR
 	JCO_CLIENT = 001
 	JCO_LANG = en
-	JCO_POOL_CAPACITY  = 10
+	JCO_POOL_CAPACITY  = 3
 	JCO_PEAK_LIMIT = 10
 
 This file contains the basic SAP connection information.
@@ -66,8 +66,8 @@ The POST body should look something like this :
 	"SAPUser":"username",
 	"SAPPassword":"mypass123",
 	"serviceName":"ABAP_AS_WITH_POOL",
-	"function":"BAPI_USER_GET_DETAIL",
-	"inputParameters":{
+	"functionName":"BAPI_USER_GET_DETAIL",
+	"importParameters":{
 		                        "USERNAME":"UserName"
 		                    }
 	}
