@@ -60,6 +60,7 @@ You can now run the Adapter by executing the rmp-sec-JCO3Conector.jar in the ins
 If everything is configured correctly you can now place a request from RMP to retrieve information from SAP.
 The POST body should look something like this :
     
+	Example 1:
 	{
 	"protocol":"JCO3",
 	"data":{
@@ -70,6 +71,17 @@ The POST body should look something like this :
 	"importParameters":{
 		                        "USERNAME":"UserName"
 		                    }
+	}
+	}
+	Example 2:
+	{
+	"protocol":"JCO3",
+	"data":{
+	"SAPUser":"username",
+	"SAPPassword":"mypass123",
+	"serviceName":"ABAP_AS_WITH_POOL",
+	"functionName":"BAPI_USER_GET_DETAIL",
+	"getMetaData":"true"
 	}
 	}
 
