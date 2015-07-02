@@ -127,8 +127,8 @@ If parameter contains table inside it then define table as shown in Example 3,
 single row of corresponding table.
 	
 Two response type:
-		* **JSON**- default
-		* **XML**- in case of filed “responseType” is present with value “TRUE”.
+		 **JSON**- default.
+		 **XML**- in case of filed “responseType” is present with value “TRUE”.
 
 
 The expected return is a JSON object that should look like this :
