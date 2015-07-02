@@ -62,18 +62,17 @@ The POST body should look something like this :
     
 	Example 1:
 	{
-	"protocol":"JCO3",
-	"data":{
-	"SAPUser":"username",
-	"SAPPassword":"mypass123",
-	"serviceName":"ABAP_AS_WITH_POOL",
-	"functionName":"BAPI_USER_GET_DETAIL",
-	"importParameters":{
-		                        "USERNAME":"UserName"
-		                    }
+	  "protocol": "JCO3",
+	  "data": {
+	    "SAPUser": "username",
+	    "SAPPassword": "mypass123",
+	    "serviceName": "ABAP_AS_WITH_POOL",
+	    "functionName": "BAPI_USER_GET_DETAIL",
+	    "importParameters": {
+	      "USERNAME": "UserName"
+	    }
+	  }
 	}
-	}
-
 	Example 2:
 	{
 	"protocol":"JCO3",
@@ -85,7 +84,6 @@ The POST body should look something like this :
 	"getMetaData":"true"
 	}
 	}
-
 	Example 3:
 	{
 	  "protocol": "JCO3",
