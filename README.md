@@ -119,9 +119,10 @@ The POST body should look something like this :
 	  }
 	}
 
-	If parameter contains table inside it then define table as shown in Example 3, "tableParameters" 
-	contains table "REQUISITION_ITEMS" so that value for key "REQUISITION_ITEMS" is array of JSON where
-	each index will be consider as single row of corresponding table.
+	If parameter contains table inside it then define table as shown in Example 3,
+	"tableParameters" contains table "REQUISITION_ITEMS" so that value for key 
+	"REQUISITION_ITEMS" is array of JSON where each index will be consider as 
+	single row of corresponding table.
 	
 	Two response type:
 		JSON- default
