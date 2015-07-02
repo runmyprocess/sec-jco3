@@ -5,7 +5,7 @@ The "JCO3 Adapter" allows you to access SAP instances from the [SEC Manager](htt
 
 
 ##Install and Configure the Adapter
-1. Make sure you have [Java](http://www.oracle.com/technetwork/java/index.html) and [Maven](http://maven.apache.org/) installed on your machine. You must also have the RMP's [JSON](https://github.com/runmyprocess/json/) and the [sec-sdk](https://github.com/runmyprocess/sec-sdk) libraries installed on your local mvn repo; as well as the [jco-3.0.9.jar](http://service.sap.com/connectors).
+1. Make sure you have [Java 7](http://www.oracle.com/technetwork/java/index.html) and [Maven](http://maven.apache.org/) installed on your machine. You must also have the RMP's [JSON](https://github.com/runmyprocess/json/) and the [sec-sdk](https://github.com/runmyprocess/sec-sdk) libraries installed on your local mvn repo; as well as the [jco-3.0.9.jar](http://service.sap.com/connectors).
 2. Download this project and  run "mvn clean install" on the project's folder where the pom.xml is situated.
 
 Run mvn clean install :
