@@ -133,5 +133,5 @@ The expected return is a JSON object that should look like this :
 
 	{
 	"SECStatus":200,
-	"Response":SAPResponse
+	"Response":SAPResponse encoded in Base64
 	}
