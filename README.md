@@ -6,7 +6,7 @@ The "JCO3 Adapter" allows you to access SAP instances from the [SEC Manager](htt
 
 ##Install and Configure the Adapter
 1. Make sure you have [Java](http://www.oracle.com/technetwork/java/index.html) and [Maven](http://maven.apache.org/) installed on your machine. You must also have the RMP's [JSON](https://github.com/runmyprocess/json/) and the [sec-sdk](https://github.com/runmyprocess/sec-sdk) libraries installed on your local mvn repo; as well as the [jco-3.0.9.jar](http://service.sap.com/connectors).
-2. Download this project and  run mvn clean install on the project's folder where the pom.xml is situated.
+2. Download this project and  run "mvn clean install" on the project's folder where the pom.xml is situated.
 
 Run mvn clean install :
 
@@ -84,6 +84,42 @@ The POST body should look something like this :
 	"getMetaData":"true"
 	}
 	}
+	Example 3:
+	{
+	  "protocol": "JCO3",
+	  "data": {
+	    "SAPUser": "username",
+	    "SAPPassword": "mypass123",
+	    "serviceName": "ABAP_AS_WITH_POOL",
+	    "functionName": "BAPI_REQUISITION_CREATE",
+	    "inputParameters": {
+	      "AUTOMATIC_SOURCE": "X"
+	    },
+	    "tableParameters": {
+	      "REQUISITION_ITEMS": [
+	        {
+	          "DOC_TYPE": "MYDOC_TYPE",
+	          "DEL_DATCAT": "MYDEL_DATCAT",
+	          "DELIV_DATE": "MYDELIV_DATE",
+	          "PLANT": "MYPLANT",
+	          "STORE_LOC": "MYSTORE_LOC",
+	          "PUR_GROUP": "MYPUR_GROUP",
+	          "MAT_GRP": "MYMAT_GRP",
+	          "PREQ_ITEM": "MYPREQ_ITEM",
+	          "MATERIAL": "MYMATERIAL",
+	          "QUANTITY": "MYQUANTITY",
+	          "PREQ_NAME": "MYPREQ_NAME",
+	          "PURCH_ORG": "MYPURCH_ORG",
+	          "ACCTASSCAT": "MYACCTASSCAT",
+	          "VEND_MAT": "MYVEND_MAT"
+	        }
+	      ]
+	    },
+	    "responseType":"XML",
+	  }
+	}
+
+
 
 The expected return is a JSON object that should look like this :
 
