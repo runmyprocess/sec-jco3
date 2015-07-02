@@ -128,7 +128,7 @@ single row of corresponding table.
 	
 Two response type:
 		 **JSON**- default.
-		 **XML**- in case of filed “responseType” is present with value “TRUE”.
+		 **XML**- in case of filed “responseType” is present with value “XML”.
 
 
 The expected return is a JSON object that should look like this :
