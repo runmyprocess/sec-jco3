@@ -21,18 +21,23 @@ import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 /**
+ * <p>The main data handling class <tt>JCO3DataHandler</tt> with methods in this class,
+ * it is possible to create instance of <tt>JCO3DataHandler</tt>.
+ * <tt>JCO3DataHandler</tt> capacitively handles data with type conversion ABAP to JAVA and vis versa.
+ * also provides generic getter/setter methods to get JCoParameterList as LinkedHashMap or set JCoParameterList from JSON.</p>
  * 
  * @author Sanket Joshi <sanket.joshi@flowian.com>
  *
  */
-
 public class JCO3DataHandler {
 
+	/** Logging instance */
 	private static final SECLogManager LOG = new SECLogManager(JCO3DataHandler.class.getName());
-	/**
+
+	/**<ul><li>Returns the description of all parameters of requested <TT>JCoFunction</TT> as meta-data.
 	 * 
-	 * @param function
-	 * @return
+	 * @param function instance of <tt>JCoFunction</tt>
+	 * @return paramertsList instance of <tt>LinkedHashMap</tt> values contains meta-data. 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public LinkedHashMap getParamertsMetadata(JCoFunction function)
@@ -61,11 +66,11 @@ public class JCO3DataHandler {
 		return paramertsList;
 	}
 
-	/**
+	/**<ul><li>Returns the description of field of requested <TT>JCoParameterList</TT> as meta-data.
 	 * 
-	 * @param iterator
-	 * @param parameters
-	 * @return
+	 * @param iterator instance of <tt>JCoFieldIterator</tt> to iterate over fields <tt>JCoParameterList</tt>.
+	 * @param parameters instance of <tt>LinkedHashMap</tt> to put values of fields.
+	 * @return parameters instance of <tt>LinkedHashMap</tt> updated values of fields.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private LinkedHashMap getFieldMetadata(JCoFieldIterator iterator,LinkedHashMap parameters)
@@ -90,50 +95,50 @@ public class JCO3DataHandler {
 		return parameters;
 	}
 
-	/**
+	/**<ul><li>Returns the description of table of requested <TT>JCoField</TT> as meta-data.
 	 * 
-	 * @param table
-	 * @return
+	 * @param field instance of <tt>JCoField</tt>.
+	 * @return map instance of <tt>LinkedHashMap</tt> to put values of table.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private LinkedHashMap getTableParameterMetadata(JCoField table)
+	private LinkedHashMap getTableParameterMetadata(JCoField field)
 	{
 		// TODO Auto-generated method stub
-		JCoTable t = table.getTable();
+		JCoTable t = field.getTable();
 		JCoFieldIterator iter = t.getFieldIterator();
-		LinkedHashMap m = new LinkedHashMap();
+		LinkedHashMap map = new LinkedHashMap();
 		while(iter.hasNextField())
 		{
 			JCoField f = iter.nextField();
-			m.put(f.getName(), f.getDescription());
+			map.put(f.getName(), f.getDescription());
 		}
 
-		return m;
+		return map;
 	}
 
-	/**
+	/**<ul><li>Returns the description of structure of requested <TT>JCoField</TT> as meta-data.
 	 * 
-	 * @param structure
-	 * @return
+	 * @param field instance of <tt>JCoField</tt>.
+	 * @return map instance of <tt>LinkedHashMap</tt> to put values of structure.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private LinkedHashMap getStructureParameterMetadata(JCoField structure)
+	private LinkedHashMap getStructureParameterMetadata(JCoField field)
 	{
 		// TODO Auto-generated method stub
-		JCoFieldIterator iter = structure.getStructure().getFieldIterator();
-		LinkedHashMap m = new LinkedHashMap();
+		JCoFieldIterator iter = field.getStructure().getFieldIterator();
+		LinkedHashMap map = new LinkedHashMap();
 		while(iter.hasNextField())
 		{
 			JCoField f = iter.nextField();
-			m.put(f.getName(),f.getDescription());
+			map.put(f.getName(),f.getDescription());
 		}
-		return m;
+		return map;
 	}
 
-	/**
+	/**<ul><li>Returns the values of all parameters(import, export, table, changing) of requested <TT>JCoFunction</TT>.
 	 * 
-	 * @param function
-	 * @return
+	 * @param function instance of <tt>JCoFunction</tt>
+	 * @return paramertsList instance of <tt>LinkedHashMap</tt> values contains parameters value in SAP
 	 * @throws Exception 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -167,11 +172,11 @@ public class JCO3DataHandler {
 		return paramertsList;
 	}
 
-	/**
+	/**<ul><li>Returns the values of field of requested <TT>JCoParameterList</TT>.
 	 * 
-	 * @param iterator
-	 * @param parameters
-	 * @return
+	 * @param iterator instance of <tt>JCoFieldIterator</tt> to iterate over fields <tt>JCoParameterList</tt>.
+	 * @param parameters instance of <tt>LinkedHashMap</tt> to put values of fields.
+	 * @return parameters instance of <tt>LinkedHashMap</tt> with values of fields.
 	 * @throws Exception 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -197,18 +202,18 @@ public class JCO3DataHandler {
 		return parameters;
 	}
 
-	/**
+	/**<ul><li>Returns the values of table of requested <TT>JCoField</TT>.
 	 * 
-	 * @param table
-	 * @return
+	 * @param field instance of <tt>JCoField</tt>.
+	 * @return list instance of <tt>LinkedList</tt> to put values of table.
 	 * @throws Exception 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private LinkedList getTableParameter(JCoField table) throws Exception
+	private LinkedList getTableParameter(JCoField field) throws Exception
 	{
 		// TODO Auto-generated method stub
-		LinkedList l = new LinkedList();
-		JCoTable t = table.getTable();
+		LinkedList list = new LinkedList();
+		JCoTable t = field.getTable();
 		for (int i = 0; i < t.getNumRows(); i++)
 		{
 			t.setRow(i);
@@ -219,42 +224,46 @@ public class JCO3DataHandler {
 				JCoField f = iter.nextField();
 				m.put(f.getName(),getABAPTableValueAsString(t,f));
 			}
-			l.add(m);
+			list.add(m);
 		}
-		return l;
+		return list;
 	}
 
-	/**
+	/**<ul><li>Returns the values of structure of requested <TT>JCoField</TT>.
 	 * 
-	 * @param structure
-	 * @return
+	 * @param field instance of <tt>JCoField</tt>.
+	 * @return map instance of <tt>LinkedHashMap</tt> to put values of table.
 	 * @throws Exception 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private LinkedHashMap getStructureParameter(JCoField structure) throws Exception
+	private LinkedHashMap getStructureParameter(JCoField field) throws Exception
 	{	
 		// TODO Auto-generated method stub
-		JCoStructure s=structure.getStructure();
+		JCoStructure s=field.getStructure();
 		JCoFieldIterator iter = s.getFieldIterator();
-		LinkedHashMap m = new LinkedHashMap();
+		LinkedHashMap map = new LinkedHashMap();
 		while(iter.hasNextField())
 		{
 			JCoField f = iter.nextField();
-			m.put(f.getName(), getABAPStructureValueAsString(s,f));
+			map.put(f.getName(), getABAPStructureValueAsString(s,f));
 		}
-		return m;
+		return map;
 	}
 
-
+	/**<ul><li>Calls the <tt>JCoField</tt> appropriate getter method 
+	 * depending on current case of switch and return the result as type <tt>String</tt>.</li>  
+	 * 
+	 * @param field instance of <tt>JCoField</tt>
+	 * @param abap_jco_type Possible ABAP types </br>TYPE_CHAR</br>TYPE_NUM</br>TYPE_BYTE</br>TYPE_BCD</br>TYPE_INT
+	 * 						</br>TYPE_INT1</br>TYPE_INT2</br>TYPE_FLOAT</br>TYPE_DATE</br>TYPE_TIME
+	 * 						</br>TYPE_DECF16</br>TYPE_DECF34</br>TYPE_STRING</br>TYPE_XSTRING
+	 * @return value value of <code>field</code> in <tt>String</tt> type
+	 * @throws Exception
+	 */
 	private String getABAPFliedValueAsString(JCoField field,String abap_jco_type) throws Exception
 	{
 
 		String value=null;
-		/**
-		 * Possible ABAP types
-		 * TYPE_CHAR, TYPE_NUM, TYPE_BYTE, TYPE_BCD, TYPE_INT, TYPE_INT1, TYPE_INT2, TYPE_FLOAT, 
-		 * TYPE_DATE, TYPE_TIME, TYPE_DECF16, TYPE_DECF34, TYPE_STRING, TYPE_XSTRING
-		 */
 		switch(abap_jco_type)
 		{
 		case "CHAR":value=field.getString();break;//String
@@ -302,16 +311,24 @@ public class JCO3DataHandler {
 		return value;
 	}
 
+	
+	/**<ul><li>Calls the <tt>JCoTable</tt> appropriate getter method 
+	 * depending on current case of switch and return the result as type <tt>String</tt>.
+	 * <li>Possible ABAP types </br>TYPE_CHAR</br>TYPE_NUM</br>TYPE_BYTE</br>TYPE_BCD</br>TYPE_INT
+	 *				 </br>TYPE_INT1</br>TYPE_INT2</br>TYPE_FLOAT</br>TYPE_DATE</br>TYPE_TIME
+	 *				 </br>TYPE_DECF16</br>TYPE_DECF34</br>TYPE_STRING</br>TYPE_XSTRING
+	 * 
+	 * @param table instance of <tt>JCoStructure</tt> whose field vale to be retrieve. 
+	 * @param field instance of <tt>JCoField</tt> whose vale to be retrieve.
+	 * @return value value of <code>field</code> in <tt>String</tt> type.
+	 * @throws Exception
+	 */
+	
 	private String getABAPTableValueAsString(JCoTable table,JCoField field)  throws Exception
 	{
 
 		String abap_jco_type=field.getTypeAsString();
 		String value=null;
-		/**
-		 * Possible ABAP types
-		 * TYPE_CHAR, TYPE_NUM, TYPE_BYTE, TYPE_BCD, TYPE_INT, TYPE_INT1, TYPE_INT2, TYPE_FLOAT, 
-		 * TYPE_DATE, TYPE_TIME, TYPE_DECF16, TYPE_DECF34, TYPE_STRING, TYPE_XSTRING
-		 */
 		switch(abap_jco_type)
 		{
 		case "CHAR":value=table.getString(field.getName()); 
@@ -361,16 +378,22 @@ public class JCO3DataHandler {
 		return value;
 	}
 
+	/**<ul><li>Calls the <tt>JCoStructure</tt> appropriate getter method 
+	 * depending on current case of switch and return the result as type <tt>String</tt>. 
+	 * <li>Possible ABAP types </br>TYPE_CHAR</br>TYPE_NUM</br>TYPE_BYTE</br>TYPE_BCD</br>TYPE_INT
+	 * </br>TYPE_INT1</br>TYPE_INT2</br>TYPE_FLOAT</br>TYPE_DATE</br>TYPE_TIME
+	 * </br>TYPE_DECF16</br>TYPE_DECF34</br>TYPE_STRING</br>TYPE_XSTRING
+	 * 
+	 * @param structure instance of <tt>JCoStructure</tt> whose field vale to be retrieve. 
+	 * @param field instance of <tt>JCoField</tt> whose vale to be retrieve.
+	 * @return value value of <code>field</code> in <tt>String</tt> type.
+	 * @throws Exception
+	 */
 	private String getABAPStructureValueAsString(JCoStructure structure,JCoField field)  throws Exception
 	{
 
 		String abap_jco_type=field.getTypeAsString();
 		String value=null;
-		/**
-		 * Possible ABAP types
-		 * TYPE_CHAR, TYPE_NUM, TYPE_BYTE, TYPE_BCD, TYPE_INT, TYPE_INT1, TYPE_INT2, TYPE_FLOAT, 
-		 * TYPE_DATE, TYPE_TIME, TYPE_DECF16, TYPE_DECF34, TYPE_STRING, TYPE_XSTRING
-		 */
 		switch(abap_jco_type)
 		{
 		case "CHAR":value=structure.getString(field.getName());break;//String
@@ -414,11 +437,12 @@ public class JCO3DataHandler {
 		return value;
 	}
 
-	/**
+	/**<ul><li>Call <tt>JCO3DataHandler</tt> generic method <code>setParametersList</code>to 
+	 * set the values of list's of parameters(import, export, table, changing) of requested <TT>JCoFunction</TT>.
 	 * 
-	 * @param jsonObject
-	 * @param function
-	 * @throws Exception 
+	 * @param jsonObject hold JSON input
+	 * @param function requested <tt>JCoFunction</tt> instance
+	 * @throws Exception
 	 */
 	public void setParamerts(JSONObject jsonObject,JCoFunction function) throws Exception 
 	{
@@ -464,10 +488,10 @@ public class JCO3DataHandler {
 	}
 
 
-	/**
+	/**<ul>This is a generic method to set any <tt>JCoParameterList</tt>.
 	 * 
-	 * @param parameters
-	 * @param parameterlist
+	 * @param parameters hold JSON input.
+	 * @param parameterlist requested <tt>JCoParameterList</tt> instance (import, export, table, changing)
 	 * @throws Exception
 	 */
 	private void setParametersList(JSONObject parameters,JCoParameterList parameterlist) throws Exception
@@ -483,7 +507,7 @@ public class JCO3DataHandler {
 				if(child != null)
 				{	JCoTable table=null;
 				if(metaData.getTypeAsString(key.toString())=="TABLE")
-				{	table=setABAPTable(parameterlist.getTable(key.toString()),child);
+				{	table=defineABAPTable(parameterlist.getTable(key.toString()),child);
 				parameterlist.setValue(key.toString(), table);
 				}
 				if(metaData.getTypeAsString(key.toString())=="STRUCTURE")
@@ -497,7 +521,7 @@ public class JCO3DataHandler {
 				if(child != null)
 				{	JCoStructure structure=null;
 				if(metaData.getTypeAsString(key.toString())=="STRUCTURE")
-				{	structure=setABAPStructure(parameterlist.getStructure(key.toString()),child);
+				{	structure=defineABAPStructure(parameterlist.getStructure(key.toString()),child);
 				parameterlist.setValue(key.toString(), structure);
 				}
 				if(metaData.getTypeAsString(key.toString())=="TABLE")
@@ -511,13 +535,16 @@ public class JCO3DataHandler {
 		}
 	}
 
-	/**
-	 * @param table
-	 * @param child
-	 * @return
+	
+	/**<ul><li>Define values for requested instance of <tt>JCoTable</tt> from <tt>JSONArray</tt>.
+	 * <li>The vale return is instance of <tt>JCoTable</tt> with defined row and filed in it.
+	 *  
+	 * @param table instance of <tt>JCoTable</tt> which is to be define. 
+	 * @param child instance of <tt>JSONArray</tt> array of <tt>JSONObject</tt> each index will be one row for <code>table</code>.
+	 * @return table  instance of <tt>JCoTable</tt> with value.
 	 * @throws Exception
 	 */
-	private JCoTable setABAPTable(JCoTable table, JSONArray child) throws Exception {
+	private JCoTable defineABAPTable(JCoTable table, JSONArray child) throws Exception {
 		// TODO Auto-generated method stub
 		for(int i=0;i<child.size();i++)
 		{
@@ -533,13 +560,15 @@ public class JCO3DataHandler {
 	}
 
 
-	/**
-	 *  @param structure
-	 * @param child
-	 * @return
+	/**<ul><li>Define values for requested instance of <tt>JCoStructure</tt> from <tt>JSONObject</tt>.
+	 * <li>The vale return is instance of <tt>JCoStructure</tt> with defined filed in it.
+	 * 
+	 * @param structure instance of <tt>JCoStructure</tt> which is to be define. 
+	 * @param child instance of <tt>JSONObject</tt>.
+	 * @return structure  instance of <tt>JCoStructure</tt> with value.
 	 * @throws Exception
 	 */
-	private JCoStructure setABAPStructure(JCoStructure structure, JSONObject child) throws Exception {
+	private JCoStructure defineABAPStructure(JCoStructure structure, JSONObject child) throws Exception {
 		// TODO Auto-generated method stub
 		Set<?> keys = child.keySet();
 		for (Object key : keys) 
@@ -551,21 +580,22 @@ public class JCO3DataHandler {
 
 
 
-	/**
-	 * @param parameterlist
-	 * @param parameterKey
-	 * @param parameterValue
-	 * @param abap_jco_type
+	/**<ul><li>Convert the accepted <code>parameterValue</code> to target JAVA 
+	 * type depending on current case of switch.
+	 * <li>Possible ABAP types </br>TYPE_CHAR</br>TYPE_NUM</br>TYPE_BYTE</br>TYPE_BCD</br>TYPE_INT
+	 * </br>TYPE_INT1</br>TYPE_INT2</br>TYPE_FLOAT</br>TYPE_DATE</br>TYPE_TIME
+	 * </br>TYPE_DECF16</br>TYPE_DECF34</br>TYPE_STRING</br>TYPE_XSTRING
+	 * <li>Calls the <tt>JCoParameterList</tt> overloaded appropriate setter method to set value.
+	 * 
+	 * @param parameterlist instance of <tt>JCoParameterList</tt>
+	  * @param parameterKey name of parameter
+	 * @param parameterValue value of parameter
+	 * @param abap_jco_type ABAP type
 	 * @throws Exception
 	 */
 	private void setABAPFliedValue(JCoParameterList parameterlist,String parameterKey,String parameterValue,String abap_jco_type) throws Exception
 	{
 
-		/**
-		 * Possible ABAP types
-		 * TYPE_CHAR, TYPE_NUM, TYPE_BYTE, TYPE_BCD, TYPE_INT, TYPE_INT1, TYPE_INT2, TYPE_FLOAT, 
-		 * TYPE_DATE, TYPE_TIME, TYPE_DECF16, TYPE_DECF34, TYPE_STRING, TYPE_XSTRING
-		 */
 		switch(abap_jco_type)
 		{
 
@@ -700,26 +730,25 @@ public class JCO3DataHandler {
 		}
 	}
 
-	
 
 
-	/**
-	 * @param table
-	 * @param parameterKey
-	 * @param parameterValue
-	 * @param abap_jco_type
+
+	/**<ul><li>Convert the accepted <code>parameterValue</code> to target JAVA 
+	 * type depending on current case of switch.
+	 * <li>Possible ABAP types </br>TYPE_CHAR</br>TYPE_NUM</br>TYPE_BYTE</br>TYPE_BCD</br>TYPE_INT
+	 * </br>TYPE_INT1</br>TYPE_INT2</br>TYPE_FLOAT</br>TYPE_DATE</br>TYPE_TIME
+	 * </br>TYPE_DECF16</br>TYPE_DECF34</br>TYPE_STRING</br>TYPE_XSTRING
+	 * <li>Calls the <tt>JCoTable</tt> overloaded appropriate setter method to set value.
+	 * 
+	 * @param table instance of <tt>JCoTable</tt>
+	 * @param parameterKey name of parameter
+	 * @param parameterValue value of parameter
+	 * @param abap_jco_type ABAP type
 	 * @throws Exception
 	 */
-
-
 	private void setABAPTableValue(JCoTable table,String parameterKey,String parameterValue,String abap_jco_type) throws Exception
 	{
 
-		/**
-		 * Possible ABAP types
-		 * TYPE_CHAR, TYPE_NUM, TYPE_BYTE, TYPE_BCD, TYPE_INT, TYPE_INT1, TYPE_INT2, TYPE_FLOAT, 
-		 * TYPE_DATE, TYPE_TIME, TYPE_DECF16, TYPE_DECF34, TYPE_STRING, TYPE_XSTRING
-		 */
 		switch(abap_jco_type)
 		{
 
@@ -852,23 +881,22 @@ public class JCO3DataHandler {
 		}
 	}
 
-	/**
-	 * @param structure
-	 * @param parameterKey
-	 * @param parameterValue
-	 * @param abap_jco_type
+	/**<ul><li>Convert the accepted <code>parameterValue</code> to target JAVA 
+	 * type depending on current case of switch.
+	 * <li>Possible ABAP types </br>TYPE_CHAR</br>TYPE_NUM</br>TYPE_BYTE</br>TYPE_BCD</br>TYPE_INT
+	 * </br>TYPE_INT1</br>TYPE_INT2</br>TYPE_FLOAT</br>TYPE_DATE</br>TYPE_TIME
+	 * </br>TYPE_DECF16</br>TYPE_DECF34</br>TYPE_STRING</br>TYPE_XSTRING
+	 * <li>Calls the <tt>JCoStructure</tt> overloaded appropriate setter method to set value.
+	 * 
+	 * @param structure instance of <tt>JCoStructure</tt>
+	 * @param parameterKey name of parameter
+	 * @param parameterValue value of parameter
+	 * @param abap_jco_type ABAP type
 	 * @throws Exception
 	 */
 
 	private void setABAPStructureValue(JCoStructure structure,String parameterKey,String parameterValue,String abap_jco_type) throws Exception
 	{
-
-		/**
-		 * Possible ABAP types
-		 * TYPE_CHAR, TYPE_NUM, TYPE_BYTE, TYPE_BCD, TYPE_INT, TYPE_INT1, TYPE_INT2, TYPE_FLOAT, 
-		 * TYPE_DATE, TYPE_TIME, TYPE_DECF16, TYPE_DECF34, TYPE_STRING, TYPE_XSTRING
-		 */
-
 		switch(abap_jco_type)
 		{
 
@@ -999,12 +1027,6 @@ public class JCO3DataHandler {
 		break;		
 		}
 	}
-
-
-
-
-
-
 
 
 }

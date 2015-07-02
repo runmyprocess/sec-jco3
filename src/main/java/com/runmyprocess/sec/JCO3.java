@@ -25,70 +25,63 @@ import org.runmyprocess.sec.SECLogManager;
 import org.runmyprocess.sec.Config;
 import org.runmyprocess.sec.ProtocolInterface;
 import org.runmyprocess.sec.Response;
-
-/**
+/** <li>Class <tt>JCO3</tt> implements <tt>ProtocolInterface</tt> and
+ * overrides it's methods <code>accept</code>, <code>getResponse</code> 
+ * with other methods in this class.<li>It is possible to create instance of <tt>JCO3</tt>.</p>
  *
- * @author Malcolm Haslam <mhaslam@runmyprocess.com> 
  * @author Sanket Joshi <sanket.joshi@flowian.com>
  *
- * Copyright (C) 2013 Fujitsu RunMyProcess
- *
- * This file is part of RunMyProcess SEC.
- *
- * RunMyProcess SEC is free software: you can redistribute it and/or modify
- * it under the terms of the Apache License Version 2.0 (the "License");
- *
- *   You may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
  */
-
 public class JCO3 implements ProtocolInterface {
 
-	// Logging instance
+	/** Logging instance */
 	private static final SECLogManager LOG = new SECLogManager(JCO3.class.getName());
 
-	static String ABAP_AS = "ABAP_AS_WITHOUT_POOL";
-	static String ABAP_AS_POOLED = "ABAP_AS_WITH_POOL";
-	static String ABAP_MS = "ABAP_MS_WITHOUT_POOL";
-
-	static String[] services = {ABAP_AS,ABAP_AS_POOLED};
+	/**
+	 * This is constant variable with value of service name <i>ABAP_AS_WITHOUT_POOL</i> 
+	 */
+	private static final String ABAP_AS = "ABAP_AS_WITHOUT_POOL";
+	/**
+	 * This is constant variable with value of service name <i>ABAP_AS_WITH_POOL</i> 
+	 */
+	private static final String ABAP_AS_POOLED = "ABAP_AS_WITH_POOL";
+	/**
+	 * This is constant variable with value of service name <i>ABAP_MS_WITHOUT_POOL</i> 
+	 */
+	@SuppressWarnings("unused")
+	private static final String ABAP_MS = "ABAP_MS_WITHOUT_POOL";
+	/**
+	 * Array of service name constants.
+	 */
+	private static final String[] services = {ABAP_AS,ABAP_AS_POOLED};
+	/** Response instance */
 	private Response response = new Response();
 
-
-	public JCO3() {
-		// TODO Auto-generated constructor stub
-	}
-
 	/**
-	 * Generates the error that will be sent back
-	 * @param e error
-	 * @return jsonObject error
+	 * <ul><li>Enforces use of <tt>Exception</tt> to accept generated exception at runtime.
+	 * <li>The value returned is the instance of <tt>JSONObject</tt> 
+	 * containing exception in <tt>String</tt> type.
+	 * 
+	 * @param exception any possible exception at runtime
+	 * @return errorObject the instance of <tt>JSONObject</tt>
 	 */
-	private JSONObject JCO3Error(Exception e){
+	private JSONObject JCO3Error(Exception exception){
 
 		response.setStatus(400);//sets the return status to internal server error
 		JSONObject errorObject = new JSONObject();
-		errorObject.put("error", e.toString());
+		errorObject.put("error", exception.toString());
 		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
+		exception.printStackTrace(new PrintWriter(sw));
 		errorObject.put("stack", sw.toString());
-		LOG.log(e.toString(),Level.WARNING);
+		LOG.log(exception.toString(),Level.WARNING);
 		response.setData(errorObject);
 		return errorObject;
 	}
 
 
-	/** Calls the <tt>Properties</tt> method <code>store</code> to store connection 
+	/** <ul><li>Calls the <tt>Properties</tt> method <code>store</code> to store connection 
 	 * Properties to the output stream in a format suitable for loading into a 
-	 * <code>Properties</code> table 
+	 * <code>Properties</code> table</li>.
 	 * 
 	 * @param destinationName    name for destination,
 	 * @param connectProperties  destination property set in <code>setConnection</code>.
@@ -110,15 +103,17 @@ public class JCO3 implements ProtocolInterface {
 		}
 	}
 
-	/**Calls the <tt>Object</tt> method <code>setProperty</code> to set connection Properties of <tt>DestinationDataProvider</tt>.
-	 * Enforces use of <tt>JSONObject</tt> for accessing SAP server's authentication details,
-	 * and JCO3.config file for accessing SAP server's other details.
-	 * <ul><li>Set connection directly with JCO repository and indirectly with SAP server.</li></ul>
-	 * The value returned is the result of the <tt>JCoDestinationManager</tt> call to <code>getDestination</code>.
+	/**<ul><li>Calls the <tt>Object</tt> method <code>setProperty</code> 
+	 * to set connection Properties of <tt>DestinationDataProvider</tt>.
+	 * <li>Enforces use of <tt>JSONObject</tt> for accessing SAP server's authentication details,
+	 * and <tt>JCO3.config</tt> file for accessing SAP server's other details.
+	 * <li>Set connection directly with JCO repository and indirectly with SAP server.
+	 * <li>The value returned is the result of the <tt>JCoDestinationManager</tt>
+	 *  call to <code>getDestination</code>.
 	 * 
 	 * @param jsonObject JSON input from RMP application.
 	 * @return			 the object of <tt>JCoDestination</tt>	
-	 * @throws Exception
+	 * @throws Exception 
 	 */
 
 	private JCoDestination setConnection(JSONObject jsonObject)throws Exception{
@@ -148,13 +143,22 @@ public class JCO3 implements ProtocolInterface {
 
 
 	}
-
-	/**
-	 * @param jsonObject
-	 * @return
+	/**<ul><li>calls <tt>JCoDestination</tt> method <code>getRepository</code> to access <tt>JCo Repository</tt>
+	 * <li>calls <tt>JCoContext</tt> method <code>begin</code> to start State-full session
+	 * <li>understands the type request from requested data (either meta-data or BAPI execution) and execute accordingly.()
+	 * <li>calls <tt>JCoRepository</tt> method <code>getFunction</code> to access <tt>JCo Function</tt>.
+	 * <li>calls <tt>JCO3DataHandler</tt> method <code>setParamerts</code>
+	 * to set required parameters of BAPI execution.
+	 * <li>The value returned is the instance of <tt>JSONObject</tt> 
+	 * containing either results of current <tt>JCoFunction</tt> execution(value XML/JSON), or
+	 * the meta-data of current <tt>JCoFunction</tt>.
+	 *
+	 * @param destination JCo Destination for current JCo request. 
+	 * @param jsonObject JSON input from caller.
+	 * @return response results for current JCo request after completion of <code>worker</code>
 	 * @throws Exception
 	 */
-
+	
 	private JSONObject worker(JCoDestination destination,JSONObject jsonObject)throws Exception
 	{
 		LOG.log("Getting repository...", Level.INFO);
@@ -176,17 +180,17 @@ public class JCO3 implements ProtocolInterface {
 					LOG.log("Setting Parameters...", Level.INFO);
 					if(jsonObject.containsKey("importParameters") || jsonObject.containsKey("exportParameters") || jsonObject.containsKey("tableParameters") || jsonObject.containsKey("changingParameters"))
 						datahandler.setParamerts(jsonObject,function); 
-					
+
 					LOG.log("Executing BAPI...", Level.INFO);
 					function.execute(destination);  // call to SAP server
-					
+
 					LOG.log("BAPI execution completed...", Level.INFO);
 					LOG.log("Getting results...", Level.INFO);
 					if(jsonObject.containsKey("responseType") && jsonObject.getString("responseType").equalsIgnoreCase("xml"))
 						response.put(function.getName(),function.toXML());	
 					else
 						response.put(function.getName(),datahandler.getParamerts(function));
-				
+
 				}
 				catch (JSONException e){
 					return JCO3Error(e);
@@ -222,7 +226,7 @@ public class JCO3 implements ProtocolInterface {
 				if(function != null)
 				{
 					try	{	LOG.log("Retrieving metadata...", Level.INFO);
-						response.put(function.getName(),datahandler.getParamertsMetadata(function));
+					response.put(function.getName(),datahandler.getParamertsMetadata(function));
 					}catch (Exception e){
 						return JCO3Error(e);
 					}finally{
@@ -239,11 +243,15 @@ public class JCO3 implements ProtocolInterface {
 		return response;
 	}
 
-	/**
-	 * Receives the information, reads the configuration information and calls the appropriate functions to set the
-	 * response value
-	 * @param jsonObject
-	 * @param configPath
+	/** <ul><li>Calls the <tt>JCO3</tt> method <code>setConnection</code> to set the connection with SAP server
+	 * 	and accept the object of <tt>JCoDestination.</tt>
+	 * 	<li>Calls the <tt>JCO3</tt> method <code>worker</code> to start working on current JCO request
+	 * 	and accept the result as <tt>JSONObject</tt>
+	 * 	<li>Encode the request result and set in Response with status 200.
+	 *	<li> Enforces use of <tt>JSONObject</tt> and <tt>String</tt> for receiving JSON of input data 
+	 * and local configuration file path.
+	 * @param jsonObject JSON input from RMP application.
+	 * @param configPath configuration file path.
 	 */
 	@Override
 	public void accept(JSONObject jsonObject,String configPath) {
@@ -271,6 +279,11 @@ public class JCO3 implements ProtocolInterface {
 		}
 	}
 
+	
+	/**
+	 * <ul><li>The value returned is the instance of <tt>Response</tt> 
+	 * containing results of current JCO request.</li> 
+	 */
 	@Override
 	public Response getResponse() {
 		LOG.log("returning response",Level.INFO);
