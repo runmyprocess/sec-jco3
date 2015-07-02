@@ -119,10 +119,13 @@ The POST body should look something like this :
 	  }
 	}
 
-	<ul><li>If parameter contains table inside it then define table as shown in Example 3, "tableParameters" contains table "REQUISITION_ITEMS" so that value for key "REQUISITION_ITEMS" is array of JSON where each index will be consider as single row of corresponding table. 
-	<li>Response type:
-	JSON- default
-	XML- in case of filed “responseType” is present with value “TRUE”.
+	If parameter contains table inside it then define table as shown in Example 3, "tableParameters" 
+	contains table "REQUISITION_ITEMS" so that value for key "REQUISITION_ITEMS" is array of JSON where
+	each index will be consider as single row of corresponding table.
+	
+	Two response type:
+		JSON- default
+		XML- in case of filed “responseType” is present with value “TRUE”.
 
 
 The expected return is a JSON object that should look like this :
