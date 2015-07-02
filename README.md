@@ -13,8 +13,8 @@ Run mvn clean install :
 	mvn clean install
 
 3. Copy the generated jar file (usually created in a generated "target" folder in the JDBC project's folder) to a folder of your choice. There will be two jar files generated: One will be the compiled code (JCO3Adapter-version.jar) and the compiled code with dependencies (JCO3Adapter-1.0-jar-with-dependencies.jar). If all the required libraries are on the maven repo then you can use the "JCO3Adapter-1.0-jar-with-dependencies.jar" for simple execution.
-4. Create a "configFiles" folder in the jar file's path.
-5. Inside the "configFiles" folder you must create 2 config files : handler.config and the JCO3.config
+4. Create a "configFiles" directory in the jar file's path.
+5. Inside the "configFiles" directory you must create 2 configuration files : handler.config and the JCO3.config
 
 The handler.config file should look like this :
     
