@@ -92,7 +92,7 @@ The POST body should look something like this :
 	    "SAPPassword": "mypass123",
 	    "serviceName": "ABAP_AS_WITH_POOL",
 	    "functionName": "BAPI_REQUISITION_CREATE",
-	    "inputParameters": {
+	    "importParameters": {
 	      "AUTOMATIC_SOURCE": "X"
 	    },
 	    "tableParameters": {
