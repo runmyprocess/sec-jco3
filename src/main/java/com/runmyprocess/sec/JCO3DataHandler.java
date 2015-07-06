@@ -448,7 +448,7 @@ public class JCO3DataHandler {
 	{
 
 		LOG.log("Setting import parameters...", Level.INFO);
-		JSONObject inputParameters = jsonObject.getJSONObject("inputParameters"); 
+		JSONObject inputParameters = jsonObject.getJSONObject("importParameters"); 
 		if(inputParameters != null)
 		{
 			if(inputParameters.keySet() == null)
