@@ -6,7 +6,7 @@
 
     <groupId>JCO3Adapter</groupId>
     <artifactId>JCO3Adapter</artifactId>
-    <version>pulque</version>
+    <version>Aguardiente</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.runmyprocess</groupId>
             <artifactId>json</artifactId>
-            <version>1.6.4</version>
+            <version>1.7.9</version>
         </dependency>
         <dependency>
             <groupId>org.runmyprocess.sec</groupId>
@@ -29,8 +29,9 @@
         <dependency>
             <groupId>com.sap.conn.jco</groupId>
             <artifactId>jco</artifactId>
-            <version>3.01</version>
+            <version>3.0.9</version>
          </dependency>
+
     </dependencies>
 
     <build>
@@ -39,8 +40,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>utf8</encoding>
                 </configuration>
             </plugin>
@@ -74,3 +75,4 @@
     </build>
     
 </project>
+
