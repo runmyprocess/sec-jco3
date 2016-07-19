@@ -260,14 +260,14 @@ public class JCO3 implements ProtocolInterface {
 		try{
 			LOG.log("\nStarting JCO request...", Level.INFO);
 			if (jsonObject.getString("TEST") != null){
-				reply.put("Response","Automatic TEST response from SAP Adapter");
+				reply.put("Response","Automatic TEST response from SAP Adapter :"+Base64.encode(new String("顎").getBytes("UTF-8")));
 				response.setStatus(200);//sets SEC status to 200
 				response.setData(reply);
 			}else{
 				LOG.log("Setting JCO Connection...", Level.INFO);
 				JCoDestination destination=setConnection(jsonObject);
 				LOG.log("Connection established successfully...", Level.INFO);
-				String encodedData=Base64.encode(worker(destination,jsonObject).toString().getBytes());
+				String encodedData=Base64.encode(worker(destination,jsonObject).toString().getBytes("UTF-8"));
 				reply.put("Response",encodedData);
 				response.setStatus(200);
 				response.setData(reply);
